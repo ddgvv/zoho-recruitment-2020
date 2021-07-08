@@ -1,18 +1,32 @@
-package it;
-
 import java.util.Arrays;
 
 public class AlgebricExp {
 
+	static Expresssion orderVariablesByAsciiCode(Expresssion expresssion) {
+		for (int m = 0; m < expresssion.variableLength; m++) {
+			for (int n = 0; n < expresssion.variableLength; n++) {
+				if(expresssion.variablePower[m].ascii > expresssion.variablePower[n].ascii){
+					Variable variableTemp = new Variable();
+					variableTemp = expresssion.variablePower[m];
+					expresssion.variablePower[m] = expresssion.variablePower[n];
+					expresssion.variablePower[n] = variableTemp;
+				}
+			}
+		}
+		System.out.println(expresssion);
+		return expresssion;
+	}
 	static void doExpressionMultiply(AlgebricExpresssion[] algebricExpresssion,int algebricLength) {
 		for (int i = 1; i < algebricLength; i++) {
 			AlgebricExpresssion algebricExpresssionPrev = algebricExpresssion[i-1];
 			AlgebricExpresssion algebricExpresssionCur = algebricExpresssion[i];
-			System.out.println(algebricExpresssionCur +"  *  " + algebricExpresssionPrev);
+			System.out.println(algebricExpresssionCur );
+			System.out.println(algebricExpresssionPrev);
 			for (int j = 0; j < algebricExpresssionPrev.expresssionLength; j++) {
 				for (int k = 0; k < algebricExpresssionCur.expresssionLength; k++) {
 					Expresssion expresssion = new Expresssion();
 					expresssion.coEff = algebricExpresssionCur.expresssion[k].coEff * algebricExpresssionPrev.expresssion[j].coEff;
+					
 					for (int l = 0; l < algebricExpresssionCur.expresssion[k].variableLength; l++) {
 						Variable variable = new Variable();
 						variable.power = algebricExpresssionCur.expresssion[k].variablePower[l].power;
@@ -21,9 +35,10 @@ public class AlgebricExp {
 						expresssion.variablePower[l] = variable;
 						expresssion.variableLength = algebricExpresssionCur.expresssion[k].variableLength;
 					}
+					
 					int l = 0;
 					while(l < algebricExpresssionPrev.expresssion[j].variableLength) {
-						Variable variable = algebricExpresssionPrev.expresssion[j].variablePower[0];
+						Variable variable = algebricExpresssionPrev.expresssion[j].variablePower[l];
 						int visited = 0;
 						int firstArrLen = expresssion.variableLength;
 						for (int m = 0; m < algebricExpresssionCur.expresssion[k].variableLength; m++) {
@@ -40,6 +55,7 @@ public class AlgebricExp {
 						}
 						l++;
 					}
+					expresssion = orderVariablesByAsciiCode(expresssion);
 					System.out.println(expresssion);
 				}
 			}
@@ -68,7 +84,7 @@ public class AlgebricExp {
 	}
 	
 	public static void main(String[] args) {
-		getExpressionArray("(2xy+4x^2y)*(2x^2y+6xy)");
+		getExpressionArray("(2x^2y+3xy^2z-xz^3)*(5xyz+3y^2z-2z)");
 	}
 }
 
@@ -125,9 +141,6 @@ class Expresssion {
 			}
 		}
 		variableLength = varLength;
-		for(int i = 0; i < variableLength ; i ++ ) {
-			Variable variablePowerObj = variablePower[i];
-		}
  	}
 	private int getDigitEnd(String val) {
 		int endIndex = 0;
